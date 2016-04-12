@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     let MAX = 0
     let maxDepth = 5
     
+    @IBOutlet weak var restartButton: UIButton!
+    @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var oponentMancala: UILabel!
     @IBOutlet weak var PlayerMancala: UILabel!
     @IBOutlet weak var button1: UIButton!
@@ -45,6 +47,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        restartButton.hidden = true
         answerButton.append(button1);
         answerButton.append(button2);
         answerButton.append(button3);
@@ -68,52 +71,110 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    func endGame(){
+    scoreLabel.hidden = false
+        if (board[6] > board[13]){
+           scoreLabel.text =  "Human wins!"
+        }
+        else if (board[13] > board[6]){
+            scoreLabel.text = "Computer wins, as expected."
+        }
+        else {
+            scoreLabel.text = "Game is a tie!"         }
 
+        for button in answerButton {
+            
+        button.hidden = true
+        
+        }
+    restartButton.hidden = false
     
+    }
+    
+    @IBAction func restart(sender: AnyObject) {
+        board = [4,4,4,4,4,4,0,4,4,4,4,4,4,0]
+        updateLabels(board)
+        restartButton.hidden = true
+        scoreLabel.hidden = true
+        for button in answerButton {
+            
+            button.hidden = false
+            
+        }
+        
+    }
     @IBAction func button1Action(sender: AnyObject) {
+        
+        if (board[0] != 0) {
         takeMove(0, minOrmax: 1)
         updateLabels(board)
         computerMove()
+       
         updateLabels(board)
-        
+        if(checkBoard()){
+        endGame()
+        }
+        }
         
     }
     
     @IBAction func button2Action(sender: AnyObject) {
-        
+        if (board[1] != 0) {
         takeMove(1, minOrmax: 1)
         updateLabels(board)
         computerMove()
         updateLabels(board)
+        if(checkBoard()){
+            endGame()
+            }}
     }
     
 
     @IBAction func button3Action(sender: AnyObject) {
+        if (board[2] != 0) {
         takeMove(2, minOrmax: 1)
         updateLabels(board)
         computerMove()
         updateLabels(board)
-        
+        if(checkBoard()){
+            endGame()
+        }
+        }
     }
     
     @IBAction func button4Action(sender: AnyObject) {
+        if (board[3] != 0) {
         takeMove(3, minOrmax: 1)
         updateLabels(board)
         computerMove()
         updateLabels(board)
+        if(checkBoard()){
+            endGame()
+        }
+        }
     }
     
     @IBAction func button5Action(sender: AnyObject) {
+        if (board[4] != 0) {
         takeMove(4, minOrmax: 1)
         updateLabels(board)
         computerMove()
         updateLabels(board)
+        if(checkBoard()){
+            endGame()
+        }
+        }
     }
     @IBAction func button6Action(sender: AnyObject) {
+        if (board[5] != 0) {
         takeMove(5, minOrmax: 1)
         updateLabels(board)
         computerMove()
         updateLabels(board)
+        if(checkBoard()){
+            endGame()
+            }
+        }
     }
     
     
@@ -178,8 +239,7 @@ class ViewController: UIViewController {
     //bool doesntmatter;//return bool from takemove, for eval function and doens't matter here.
     check = checkBoard();//check if one side is emtpy.
  
-   // cout << "Currently at depth of " << d << endl;
-    
+      
     if (check){ //if (one side has all empty bins)
     //return INT_MAX as the score if MAX is playing and INT_MIN if MIN is playing; bin number not important
     if (MIN == minOrMax){ // Computer is playing
@@ -195,10 +255,8 @@ class ViewController: UIViewController {
     }
     else  if (d == maxD)  {
 
-//    cout << "At the max depth of "<< d << " so, evaluating now." << endl;
-
         m.score = evalFunction( minOrMax); //evaluate the current board state and give a score.
-        m.binNum = -1; //doesnt matter
+     m.binNum = -1; //doesnt matter
     //return a struct with the score; bin number not important
     return m;
 }
@@ -219,14 +277,10 @@ else {
 
                 mTemp = minmax(d+1, maxD: maxD, minOrMax: MAX, alpha: alpha, beta: m.score!); //recursive call minmax with m.score(as beta) and alpha
                 if( m.score <= alpha){  //if m.score is less than alpha
-
-//    cout << "m.score, which is " << m.score <<" is less than or equal to alpha, which is " << alpha
-//    cout << "**********So ALPHA cutting off, PRUNING, at MIN*********" << endl; //no need to search any further
                     break; //so break out of for loop
                 }
+                if (m.binNum == -1) { m.binNum = i }
                 if (mTemp.score < m.score) { //
-//    cout << "m.score, which is " << m.score <<" is greater than mTemp.score, which is " << mTemp.score
-//    cout << "Setting a new BIN number to " << i << endl;
                     m.score = mTemp.score; //if the found score it less than the kept score, so update score kept.
                     m.binNum = i; //bin number will be current index
 //less than because trying to minimize
@@ -254,19 +308,13 @@ else {
 //            cout << "MAX is recursively calling minmax, with an beta of " << beta << " and m.score (alpha) of " << m.score << endl;
                 mTemp = minmax( d+1, maxD: maxD, minOrMax: MIN, alpha: m.score!, beta: beta); //recursive call minmax with m.score(as alpha) and beta
                 if(m.score > beta){
-//    cout << "m.score, which is " << m.score <<" is greater than beta, which is " << beta << endl;
-//    cout << "**********BETA cutting off, PRUNING, at MAX*********" << endl; //no need to search any
                     break; //so break out of for loop
                 }
                 if (mTemp.score >= m.score) {
-//    cout << "m.score, which is " << m.score <<" is less than or equal to mTemp.score, which is " << mTemp.score << endl;
-//    cout << "Setting a new BIN number to " << i << endl;
                     m.score = mTemp.score;//if the found score it greater than the kept score, so update score kept.
                     m.binNum = i;//bin number will be current index
-//greater than because trying to maximize
-                }
-///////////
 
+                }
 //copy board2 back into board
 for k in 0...13{//(int k = 0; k < 14; k++)
     board[k] = board2[k];
@@ -283,15 +331,13 @@ return m}
         var moveIndex:Int
        let onlyone = checkForOne(board);
         if(onlyone){
-          //  cout << "Only one move possible so forced to make" << endl;
-           let one = findOne(board);//find location of move.
+                   let one = findOne(board);//find location of move.
             moveIndex = one;//set the found location as the move.
         }
         else{
             moveIndex = computerChooseMove(maxDepth);//otherwise use the minmax function to find the best move, given a certain depth.
         }
-       // cout << "Computer moved at "<< m << ", resulting in board below "<< endl;
-        takeMove(moveIndex, minOrmax: 0);
+              takeMove(moveIndex, minOrmax: 0);
         let gameOver = checkBoard(); //see if the game is over
         if(gameOver){
             //do something with endgame
@@ -310,6 +356,7 @@ return m}
 //    Initial Call for minmax just occurred
 
     m = minmax( 0, maxD: maxD, minOrMax: MAX, alpha: alpha, beta: beta); //initial call
+       
     return m.binNum!; //found the value of best bin
 }
     
@@ -382,6 +429,9 @@ return m}
         else {//user playing
             avoid = 13;
         }
+        if (choice == -1){
+            endGame()
+        return false}
         var picked = board[choice]; //pick up the marbles and store them
         var next = choice + 1; //find the next bin number
         if(next == avoid){ //if this has to be avoided, be sure to change it
