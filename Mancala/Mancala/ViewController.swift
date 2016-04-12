@@ -11,8 +11,12 @@ import UIKit
 class ViewController: UIViewController {
     let MIN = 1
     let MAX = 0
-    let maxDepth = 5
+    var maxDepth = 5
     
+    @IBOutlet weak var insaneDifficultyButton: UIButton!
+    @IBOutlet weak var hardDifficultyButton: UIButton!
+    @IBOutlet weak var mediumDifficultyButton: UIButton!
+    @IBOutlet weak var difficultyButton: UIButton!
     @IBOutlet weak var restartButton: UIButton!
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var oponentMancala: UILabel!
@@ -32,7 +36,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var button12: UIButton!
     
     var answerButton: Array<UIButton> = []
-    
+    var difficultyButtons: Array<UIButton> = []
     
    var board = [4,4,4,4,4,4,0,4,4,4,4,4,4,0]
     
@@ -47,6 +51,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        difficultyButtons.append(mediumDifficultyButton)
+        difficultyButtons.append(hardDifficultyButton)
+        difficultyButtons.append(insaneDifficultyButton)
+        for button in difficultyButtons{
+         button.hidden = true
+        }
+        
         restartButton.hidden = true
         answerButton.append(button1);
         answerButton.append(button2);
@@ -64,6 +76,7 @@ class ViewController: UIViewController {
         
         // Do any additional setup after loading the view, typically from a nib.
         updateLabels(board)
+        
         
     }
 
@@ -91,6 +104,49 @@ class ViewController: UIViewController {
     
     }
     
+    @IBAction func changeDifficulty(sender: AnyObject) {
+        for button in answerButton {
+            
+            button.hidden = true
+            
+        }
+        PlayerMancala.hidden = true
+        oponentMancala.hidden = true
+        difficultyButton.hidden = true
+        for button in difficultyButtons{
+        button.hidden = false
+        }
+    }
+    @IBAction func setHardDifficulty(sender: AnyObject) {
+        setDifficulty(4)
+    }
+   
+    @IBAction func setInsaneDifficulty(sender: AnyObject) {
+        setDifficulty(7)
+    }
+    
+    @IBAction func setMediumDifficulty(sender: AnyObject) {
+      setDifficulty(2)
+    }
+    func setDifficulty(dept:Int){
+    
+        maxDepth = dept
+        for button in difficultyButtons{
+            button.hidden = true
+        }
+        for button in answerButton {
+            
+            button.hidden = false
+            
+        }
+        PlayerMancala.hidden = false
+        oponentMancala.hidden = false
+        difficultyButton.hidden = false
+
+    
+    
+    
+    }
     @IBAction func restart(sender: AnyObject) {
         board = [4,4,4,4,4,4,0,4,4,4,4,4,4,0]
         updateLabels(board)
